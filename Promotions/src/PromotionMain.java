@@ -33,8 +33,8 @@ public class PromotionMain {
 	}
 	static void createNodes() {
 		for(int i =0; i < numOfNodes; i++) {
-			Node emp = new Node(String.valueOf(i));
-			myTree.put(emp.myId, emp);
+			Node node = new Node(String.valueOf(i));
+			myTree.put(node.myId, node);
 		}
 	}
 	
