@@ -4,19 +4,18 @@
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.TreeMap;
 
 public class PromotionMain {
 
 	static int lowerInterval, higherInterval, numOfNodes, numOfRules;
-	static Map<String, Node> myTree = new TreeMap<String, Node>();
+	static Map<String, Node> myTree = new HashMap<String, Node>();
 	static ArrayList<Integer> myLevels = new ArrayList<Integer>();
+	static List<Node> mySortedNodes;
 
 	public static void main(String[] args) {
 		Scanner scanIn = new Scanner(System.in);
@@ -33,16 +32,37 @@ public class PromotionMain {
 			update(childNode);
 		}
 		scanIn.close();
-		for(Node n : myTree.values()) {
-			System.out.println("id " + n.myId + " level " + n.myLevel);
-		}
-	
+		mySortedNodes = new ArrayList<Node>(myTree.values());
+		Collections.sort(mySortedNodes);
+		createLevelCount();
+		printResults();
 	}
 
 	static void createNodes() {
 		for (int i = 0; i < numOfNodes; i++) {
 			Node node = new Node(String.valueOf(i));
 			myTree.put(node.myId, node);
+		}
+	}
+
+	static void createLevelCount() {
+		if (mySortedNodes.size() > 0) {
+			int numOfEmp = 0;
+			int theEnd = mySortedNodes.size() - 1;
+			for (int i = 1; i < mySortedNodes.size(); i++) {
+				if (mySortedNodes.get(i).myLevel == mySortedNodes.get(i - 1).myLevel) {
+					numOfEmp++;
+					if (i == theEnd) {
+						myLevels.add(new Integer(++numOfEmp));
+					}
+				} else {
+					myLevels.add(new Integer(++numOfEmp));
+					numOfEmp = 0;
+					if (i == theEnd) {
+						myLevels.add(new Integer(++numOfEmp));
+					}
+				}
+			}
 		}
 	}
 
@@ -58,12 +78,14 @@ public class PromotionMain {
 		}
 	}
 
-	static int determinePromotions(int promotions) {
+	static int determinePromotions(int thePromotions) {
 		int maxPromoted = 0;
+		int numOfPromotions = thePromotions;
 		for (int i = 0; i < myLevels.size(); i++) {
-			if (promotions - ((int) myLevels.get(i)) > 0) {
+			if (numOfPromotions - ((int) myLevels.get(i)) > 0) {
 				maxPromoted += ((int) myLevels.get(i));
-			} else if ((promotions - ((int) myLevels.get(i))) == 0) {
+				numOfPromotions -= ((int) myLevels.get(i));
+			} else if ((numOfPromotions - ((int) myLevels.get(i))) == 0) {
 				return maxPromoted + ((int) myLevels.get(i));
 			} else {
 				return maxPromoted;
@@ -72,20 +94,33 @@ public class PromotionMain {
 		return maxPromoted;
 	}
 
+	static void printResults() {
+		// how many are getting promoted at lower interval
+		System.out.println(determinePromotions(lowerInterval));
+
+		int maxInterval = determinePromotions(higherInterval);
+		// how many are getting promoted at higher interval
+		System.out.println(maxInterval);
+		// how many are not being promoted
+		System.out.println(myTree.size() - maxInterval);
+	}
+
 	public static class Node implements Comparable<Node> {
 
 		String myId;
-		List<Node> myParentNodes = new ArrayList<Node>();
-		List<Node> myChildNodes = new ArrayList<Node>();
+		List<Node> myParentNodes;
+		List<Node> myChildNodes;
 		int myLevel;
 
 		public Node(String theId) {
+			myChildNodes = new ArrayList<Node>();
+			myParentNodes = new ArrayList<Node>();
 			myId = theId;
 		}
 
 		@Override
 		public int compareTo(Node node) {
-			if (this.myLevel > node.myLevel) {
+			if (this.myLevel < node.myLevel) {
 				return -1;
 			} else if (this.myLevel == node.myLevel) {
 				return 0;
