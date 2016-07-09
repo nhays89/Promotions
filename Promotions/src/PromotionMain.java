@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class PromotionMain {
 
 	static int lowerInterval, higherInterval, numOfNodes, numOfRules;
-	static Map<String, Node> myTree = new HashMap<String, Node>();
+	static Map<String, Node> myHashMap = new HashMap<String, Node>();
 	static ArrayList<Integer> myLevels = new ArrayList<Integer>();
 	static List<Node> mySortedNodes;
 
@@ -25,14 +25,14 @@ public class PromotionMain {
 		numOfRules = Integer.parseInt(scanIn.next());
 		createNodes();
 		for (int i = 0; i < numOfRules; i++) {
-			Node parentNode = myTree.get(scanIn.next());
-			Node childNode = myTree.get(scanIn.next());
+			Node parentNode = myHashMap.get(scanIn.next());
+			Node childNode = myHashMap.get(scanIn.next());
 			childNode.myParentNodes.add(parentNode);
 			parentNode.myChildNodes.add(childNode);
 			update(childNode);
 		}
 		scanIn.close();
-		mySortedNodes = new ArrayList<Node>(myTree.values());
+		mySortedNodes = new ArrayList<Node>(myHashMap.values());
 		Collections.sort(mySortedNodes);
 		createLevelCount();
 		printResults();
@@ -41,7 +41,7 @@ public class PromotionMain {
 	static void createNodes() {
 		for (int i = 0; i < numOfNodes; i++) {
 			Node node = new Node(String.valueOf(i));
-			myTree.put(node.myId, node);
+			myHashMap.put(node.myId, node);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class PromotionMain {
 		// how many are getting promoted at higher interval
 		System.out.println(maxInterval);
 		// how many are not being promoted
-		System.out.println(myTree.size() - maxInterval);
+		System.out.println(myHashMap.size() - maxInterval);
 	}
 
 	public static class Node implements Comparable<Node> {
@@ -129,5 +129,4 @@ public class PromotionMain {
 			}
 		}
 	}
-
 }
