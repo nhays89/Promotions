@@ -12,30 +12,38 @@ import java.util.Scanner;
 
 public class PromotionMain {
 
-	static int lowerInterval, higherInterval, numOfNodes, numOfRules;
+	static int lowerInterval, higherInterval, numOfNodes, numOfRules, limboNodes;
 	static Map<String, Node> myHashMap = new HashMap<String, Node>();
 	static ArrayList<Integer> myLevels = new ArrayList<Integer>();
 	static List<Node> mySortedNodes;
 
 	public static void main(String[] args) {
+
 		Scanner scanIn = new Scanner(System.in);
-		lowerInterval = Integer.parseInt(scanIn.next());
-		higherInterval = Integer.parseInt(scanIn.next());
-		numOfNodes = Integer.parseInt(scanIn.next());
-		numOfRules = Integer.parseInt(scanIn.next());
-		createNodes();
-		for (int i = 0; i < numOfRules; i++) {
-			Node parentNode = myHashMap.get(scanIn.next());
-			Node childNode = myHashMap.get(scanIn.next());
-			childNode.myParentNodes.add(parentNode);
-			parentNode.myChildNodes.add(childNode);
-			update(childNode);
+		while (scanIn.hasNextInt()) {
+			lowerInterval = scanIn.nextInt();
+			higherInterval = scanIn.nextInt();
+			numOfNodes = scanIn.nextInt();
+			numOfRules = scanIn.nextInt();
+			createNodes();
+			for (int i = 0; i < numOfRules; i++) {
+				Node parentNode = myHashMap.get(Integer.toString(scanIn.nextInt()));
+				Node childNode = myHashMap.get(Integer.toString(scanIn.nextInt()));
+				childNode.myParentNodes.add(parentNode);
+				parentNode.myChildNodes.add(childNode);
+				update(childNode);
+			}
+			mySortedNodes = new ArrayList<Node>(myHashMap.values());
+			Collections.sort(mySortedNodes);
+			createLevelCount();
+			printResults();
+			myHashMap.clear();
+			myLevels.clear();
+			mySortedNodes.clear();
+			limboNodes = 0;
+			System.out.println();
 		}
 		scanIn.close();
-		mySortedNodes = new ArrayList<Node>(myHashMap.values());
-		Collections.sort(mySortedNodes);
-		createLevelCount();
-		printResults();
 	}
 
 	static void createNodes() {
@@ -86,8 +94,11 @@ public class PromotionMain {
 				maxPromoted += ((int) myLevels.get(i));
 				numOfPromotions -= ((int) myLevels.get(i));
 			} else if ((numOfPromotions - ((int) myLevels.get(i))) == 0) {
+				//limboNodes = 0;
 				return maxPromoted + ((int) myLevels.get(i));
+
 			} else {
+				//limboNodes = numOfPromotions;
 				return maxPromoted;
 			}
 		}
@@ -102,7 +113,7 @@ public class PromotionMain {
 		// how many are getting promoted at higher interval
 		System.out.println(maxInterval);
 		// how many are not being promoted
-		System.out.println(myHashMap.size() - maxInterval);
+		System.out.println(myHashMap.size() - (limboNodes + maxInterval));
 	}
 
 	public static class Node implements Comparable<Node> {
