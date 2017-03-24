@@ -68,7 +68,7 @@ that will certainly be promoted if there are A promotions. The second line conta
 employees that will certainly be promoted if there are B promotions. The third line contains the
 number of employees that have no possibility of being promoted (even if there are B promotions).
 
-###Sample Input
+### Sample Input
 ---
 3 4 7 8
 <br>0 4
@@ -79,13 +79,13 @@ number of employees that have no possibility of being promoted (even if there ar
 <br>0 1
 <br>2 3
 <br>4 5
-###Sample Output
+### Sample Output
 ---
 2
 <br>4
 <br>3
 
-##Solution
+## Solution
 
 Begin by creating <samp>E</samp> Node objects, and inserting them into a [HashMap](https://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html). In this implementation, 
 a <code>Node</code> represents an Employee. Each node contains the following properties: id, list of parent nodes, list of child nodes, and level.
