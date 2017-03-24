@@ -47,7 +47,7 @@ being promoted.
 The precedence relation is consistent in the sense that, if an employee x outperformed an employee
 y, y did not outperform (directly or indirectly) x.
 
-###Input 
+### Input 
 ---
 The input file contains several test cases, each of them as described below.
 The first line of the input has four space separated integers: A, B, E, and P. A and B are the
@@ -61,7 +61,7 @@ that employee x outperformed employee y.
 <samp>1 ≤ A < B < E</samp>  (Interval endpoints).<br>
 <samp>2 ≤ E ≤ 5,000</samp>  (Number of employees).<br>
 <samp>1 ≤ P ≤ 20,000</samp> (Number of precedence rules).<br>
-###Output
+### Output
 ---
 For each test case, the output consists of three lines. The first line contains the number of employees
 that will certainly be promoted if there are A promotions. The second line contains the number of
